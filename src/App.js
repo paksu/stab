@@ -33,8 +33,15 @@ class App extends Component {
   }
 
   isCollapsed(filterOutPublic, participants, filters) {
-    const hasAnyFilters = Object.values(filters).some(a => a);
-    return (filterOutPublic && participants.length === 7) || (hasAnyFilters && !participants.some(participant => filters[participant]))
+    const filterCount = Object.values(filters).filter(a => a).length;
+
+    if(filterOutPublic && participants.length === 7) return true;
+
+    const hasAnyFilters = !! filterCount;
+    const matchingParticipants = participants.filter(participant => filters[participant]).length;
+    console.log(hasAnyFilters, matchingParticipants, filterCount)
+    if(hasAnyFilters && matchingParticipants != filterCount) return true;
+
   }
 
   render() {
