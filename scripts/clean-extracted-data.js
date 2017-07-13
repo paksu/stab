@@ -6,6 +6,15 @@ const { JSDOM } = jsdom;
 let allThreads = [];
 let threadIds = {};
 
+const htmlUnescape = (str) => {
+  return str
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
+}
+
 fs.readdirSync(process.argv[2], 'utf8').forEach(file => {
   const dom = new JSDOM(fs.readFileSync(process.argv[2] + file, 'utf8'));
   const { document } = dom.window;
@@ -13,7 +22,7 @@ fs.readdirSync(process.argv[2], 'utf8').forEach(file => {
   // Filter out messages that do not contain "em" element, because also the message has class ".message"
   const filterNonMessages = (messageDom) => messageDom.querySelector("em");
   const parseMessageDom = (messageDom) => {
-    const body = messageDom.querySelector(".body").innerHTML.replace(/<br>/g, "\n").trim();
+    const body = htmlUnescape(messageDom.querySelector(".body").innerHTML.replace(/<br>/g, "\n").trim());
     return {
       time: /in (\w+ 19\d\d)/.exec(messageDom.innerHTML)[1],
       from: messageDom.querySelector("em").textContent.trim(),

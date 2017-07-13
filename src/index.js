@@ -8,5 +8,15 @@ import App from './App';
 import threads from './threads.json';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App threads={threads.sort((a, b) => a.id - b.id)} />, document.getElementById('root'));
+const sortedThreads = threads.sort((a, b) => {
+  if (parseInt(a.id, 10) < parseInt(b.id, 10)) {
+    return -1;
+  }
+  if (parseInt(a.id, 10) > parseInt(b.id, 10)) {
+    return 1;
+  }
+  return 0;
+});
+
+ReactDOM.render(<App threads={sortedThreads} />, document.getElementById('root'));
 registerServiceWorker();
